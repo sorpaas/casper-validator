@@ -1,0 +1,9 @@
+(return
+ 0
+ (lll
+  (seq
+   (calldatacopy 0 0 128)
+   (call 3000 1 0 0 128 0 32)
+   (mstore 0 (eq (mload 0) 0x00402845B96a30CfB8d49449d4B0159bcEcD1d89))
+   (return 0 32))
+  0))
