@@ -39,9 +39,11 @@ const main = async () => {
   const highestFinalizedEpoch = await casperContract.methods.highest_finalized_epoch(0).call();
   console.log(`Highest finalized epoch: ${highestFinalizedEpoch}`);
 
+  const withdrawalAddress = web3.eth.accounts.create().address;
+  console.log(`Depositing to validation address: ${validationAddress}, withdrawal address: ${withdrawalAddress}`);
   const depositReceipt = await casperContract.methods.deposit(
     validationAddress,
-    web3.eth.accounts.create().address
+    withdrawalAddress,
   ).send({
     from: "0x00402845b96a30cfb8d49449d4b0159bcecd1d89",
     value: web3.utils.toWei("6", "ether"),
