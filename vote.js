@@ -7,6 +7,16 @@ const RLP = require("rlp");
 const secp256k1 = require('secp256k1');
 const web3 = new Web3("ws://localhost:8546");
 
+web3.extend({
+  property: "parity",
+  methods: [{
+    name: "sendUnsignedTransaction",
+    call: "parity_sendUnsignedTransaction",
+    params: 2,
+    inputFormatter: [web3.extend.formatters.inputAddressFormatter, null],
+  }],
+});
+
 const NON_REVERT_MIN_DEPOSITS = web3.utils.toWei("1", "ether");
 
 const casper = new web3.eth.Contract(
@@ -65,9 +75,13 @@ const vote = async () => {
     Buffer.from(signature, "hex")
   ]).toString("hex");
 
-  console.log(await casper.methods.vote(message).send({
-    from: "0x00402845b96a30cfb8d49449d4b0159bcecd1d89",
-  }));
+  const data = casper.methods.vote(message).encodeABI();
+  console.log(`Unsigned transaction data: ${data}`);
+
+  console.log(await web3.parity.sendUnsignedTransaction(
+    "0x0000000000000000000000000000000000000040",
+    data
+  ));
 };
 
 vote()
