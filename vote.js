@@ -28,7 +28,7 @@ const vote = async () => {
   console.log(`\nStart voting round ...`);
 
   const validatorIndex = 1;
-  console.log(`Validator index: ${validatorIndex}`, validatorIndex);
+  console.log(`Validator index: ${validatorIndex}`);
 
   const recommendedTargetHash = await casper.methods.recommended_target_hash().call();
   console.log(`Recommended target hash: ${recommendedTargetHash}`);
