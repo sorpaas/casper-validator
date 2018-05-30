@@ -1,11 +1,22 @@
 const SIMPLE_CASPER_ABI = require("./simple_casper.json");
 const PURITY_CHECKER_ABI = require("./purity.json");
-const PRIVATE_KEY = "e75e747d3880d72ff459342a89b025ec59f763524049ba4666cc86f184f48216";
 
 const Web3 = require("web3");
 const RLP = require("rlp");
 const secp256k1 = require('secp256k1');
 const web3 = new Web3("ws://localhost:8546");
+
+let ADDRESS = process.env["ADDRESS"].toLowerCase();
+if (ADDRESS.startsWith("0x")) {
+  ADDRESS = ADDRESS.substring(2);
+}
+
+let PRIVATE_KEY = process.env["PRIVATE_KEY"].toLowerCase();
+if (PRIVATE_KEY.startsWith("0x")) {
+  PRIVATE_KEY = PRIVATE_KEY.substring(2);
+}
+
+const VALIDATOR_INDEX = parseInt(process.env["VALIDATOR_INDEX"]);
 
 web3.extend({
   property: "parity",
@@ -28,7 +39,7 @@ const casper = new web3.eth.Contract(
 const vote = async () => {
   console.log(`\nStart voting round ...`);
 
-  const validatorIndex = 1;
+  const validatorIndex = VALIDATOR_INDEX;
   console.log(`Validator index: ${validatorIndex}`);
 
   const startDynasty = parseInt(await casper.methods.validators__start_dynasty(validatorIndex).call());

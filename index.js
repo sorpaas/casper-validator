@@ -5,11 +5,16 @@ const PURITY_CHECKER_ABI = require("./purity.json");
 const Web3 = require('web3');
 const web3 = new Web3("ws://localhost:8546");
 
+let ADDRESS = process.env["ADDRESS"].toLowerCase();
+if (ADDRESS.startsWith("0x")) {
+  ADDRESS = ADDRESS.substring(2);
+}
+
 const main = async () => {
   console.log(`Deploying validation contract ...`);
   const validationReceipt = await web3.eth.sendTransaction({
-    from: "0x00402845B96a30CfB8d49449d4B0159bcEcD1d89",
-    data: VALIDATION_CODE.replace("<address>", "00402845b96a30cfb8d49449d4b0159bcecd1d89"),
+    from: `0x${ADDRESS}`,
+    data: VALIDATION_CODE.replace("<address>", ADDRESS),
   });
 
   const validationAddress = validationReceipt.contractAddress;
@@ -45,7 +50,7 @@ const main = async () => {
     validationAddress,
     withdrawalAddress,
   ).send({
-    from: "0x00402845b96a30cfb8d49449d4b0159bcecd1d89",
+    from: `0x${ADDRESS}`,
     value: web3.utils.toWei("1500", "ether"),
   });
   console.log(`Deposit result: ${depositReceipt.status}.`);
