@@ -2,7 +2,6 @@
   "name": "casper-validator",
   "version": "0.1.0",
   "description": "Casper Validator implementation.",
-  "main": "index.js",
   "repository": "https://github.com/sorpaas/casper-validator",
   "author": "Wei Tang <hi@that.world>",
   "license": "MIT",
