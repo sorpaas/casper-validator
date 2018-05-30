@@ -29,7 +29,7 @@ web3.extend({
 });
 
 const EPOCH_LENGTH = 50;
-const NON_REVERT_MIN_DEPOSITS = web3.utils.toWei("1500", "ether");
+const NON_REVERT_MIN_DEPOSITS = web3.utils.toWei("1", "ether");
 
 const casper = new web3.eth.Contract(
   SIMPLE_CASPER_ABI,
