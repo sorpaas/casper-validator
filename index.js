@@ -46,7 +46,7 @@ const main = async () => {
     withdrawalAddress,
   ).send({
     from: "0x00402845b96a30cfb8d49449d4b0159bcecd1d89",
-    value: web3.utils.toWei("6", "ether"),
+    value: web3.utils.toWei("1500", "ether"),
   });
   console.log(`Deposit result: ${depositReceipt.status}.`);
 

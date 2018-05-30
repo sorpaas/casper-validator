@@ -17,7 +17,8 @@ web3.extend({
   }],
 });
 
-const NON_REVERT_MIN_DEPOSITS = web3.utils.toWei("1", "ether");
+const EPOCH_LENGTH = 50;
+const NON_REVERT_MIN_DEPOSITS = web3.utils.toWei("1500", "ether");
 
 const casper = new web3.eth.Contract(
   SIMPLE_CASPER_ABI,
@@ -29,6 +30,13 @@ const vote = async () => {
 
   const validatorIndex = 1;
   console.log(`Validator index: ${validatorIndex}`);
+
+  const startDynasty = parseInt(await casper.methods.validators__start_dynasty(validatorIndex).call());
+  const currentDynasty = parseInt(await casper.methods.dynasty().call());
+  console.log(`Dynasty start: ${startDynasty}, current: ${currentDynasty}`);
+  if (startDynasty > currentDynasty) {
+    return;
+  }
 
   const recommendedTargetHash = await casper.methods.recommended_target_hash().call();
   console.log(`Recommended target hash: ${recommendedTargetHash}`);
@@ -84,6 +92,20 @@ const vote = async () => {
   ));
 };
 
-vote()
+const main = async () => {
+  let lastEpoch = -1;
+
+  while (true) {
+    const currentEpoch = parseInt(await casper.methods.current_epoch().call());
+    const currentBlockNumber = await web3.eth.getBlockNumber();
+
+    if (currentEpoch != lastEpoch && (currentBlockNumber % EPOCH_LENGTH) >= (EPOCH_LENGTH / 2)) {
+      await vote();
+      lastEpoch = currentEpoch;
+    }
+  }
+};
+
+main()
   .then(v => console.log(v))
   .catch(err => console.error(err))
